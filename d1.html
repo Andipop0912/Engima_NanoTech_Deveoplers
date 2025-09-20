@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inclusive Savings — Dynamic Onboarding Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #171f3a;
+      --bg-grad: linear-gradient(135deg, #312e81 0%, #0f1724 60%);
+      --card: #111927;
+      --accent: #7c3aed;
+      --accent-2: #f59e0b;
+      --muted: #94a3b8;
+      --glass: rgba(255,255,255,0.04);
+      --success: #10b981;
+      --formal-bg: #fff;
+      --formal-card: #F0F2F4;
+      --formal-text: #212529;
+      --formal-muted: #878b93;
+      --elder-bg: #111;
+      --elder-card: #fafafa;
+      --elder-text: #000;
+      --elder-accent: #00bfff;
+      --elder-btn: #009688;
+      color-scheme: dark;
+    }
+    html, body { margin: 0; padding: 0; min-height: 100vh; background: var(--bg-grad); font-family: 'Inter', Arial, sans-serif; font-size: 15px; color: #e6eef8;}
+    body { display: flex; flex-direction: column; min-height: 100vh;}
+    .container { max-width: 1100px; margin: 0 auto; padding: 10px; flex: 1; display: flex; flex-direction: column; min-height: 100vh;}
+    .onboarding-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start; /* left align */
+      min-height: 100vh;
+      max-width: 700px;
+      margin: 0 auto;
+      padding-left: 36px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 0 27px 0;
+      width: 100%;
+      justify-content: flex-start;
+      margin-bottom: 10px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .logo {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      background: linear-gradient(135deg,#7c3aed,#5b21b6);
+      box-shadow: 0 2px 12px 0 #7c3aed33;
+    }
+    h1 {
+      font-size: 2rem;
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #f3f4fa;
+      line-height: 1.16;
+    }
+    .lead {
+      margin: 6px 0 0 0;
+      font-size: 1.11em;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .option-card {
+      border-radius:14px;
+      box-shadow:0 4px 14px rgba(0,0,0,0.22);
+      background:var(--card);
+      padding:34px 28px;
+      text-align:center;
+      flex:1 1 215px;
+      min-width:220px;
+      cursor:pointer;
+      transition:box-shadow 0.20s, transform 0.20s, outline 0.2s;
+      border: 2px solid transparent;
+      font-size: 1.14em;
+      position: relative;
+    }
+    .option-card.selected {outline:3px solid var(--accent);}
+    .option-card:hover {
+      box-shadow: 0 10px 30px 0 #7c3aed44, 0 1.5px 14px 0 rgba(81,22,167,0.24);
+      transform: translateY(-9px) scale(1.07);
+      outline: 3px solid var(--accent);
+      z-index: 1;
+      border: 2px solid var(--accent-2);
+    }
+    .option-container {
+      display: flex;
+      gap: 50px;
+      justify-content: flex-start;
+      align-items: stretch;
+      margin-top: 32px;
+      margin-left: 5px;
+    }
+    .option-card > div[style*="font-size:36px"], .option-card > div[style*="font-size: 36px"], .option-card > div[style*="font-size:42px"] {
+      font-size: 42px !important;
+      margin-bottom: 7px;
+    }
+    .option-card > div[style*="font-size:18px"], .option-card > div[style*="font-size:20px"] {
+      font-size: 1.22em !important; font-weight: 700; margin-bottom: 7px;
+    }
+    .option-card > div[style*="color:var(--muted)"] {
+      color: #c7d2fe; font-size:1em !important;
+    }
+    .age-container {margin:36px auto;text-align:center;}
+    .age-btn {
+      margin-top:19px; padding:10px 24px; font-size:18px;
+      border-radius:8px;font-weight:700;
+      background:linear-gradient(90deg,var(--accent),#5b21b6);color:white;border:none;cursor:pointer;
+      letter-spacing: 0.02em;
+      box-shadow:0 4px 14px rgba(22,32,68,0.15);
+      transition: background 0.15s;
+    }
+    .age-btn:hover { background:linear-gradient(90deg,#7849cf,#f59e0b);}
+    @media (max-width: 900px) {
+      .onboarding-center{ padding-left: 6vw; padding-right: 5vw; }
+      .option-container{ gap:18px;}
+      h1{font-size:1.36rem;}
+    }
+    /* --- rest of your app CSS as before --- */
+    main { display: grid; grid-template-columns: 1fr 340px; gap: 12px; flex: 1; min-height: 0;}
+    section, aside.side { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.012));
+      border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.30); padding: 11px 14px; overflow: visible;}
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <!-- INITIAL ONBOARDING WILL GO HERE -->
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    //-------------- State -------------
+    let userType = null, userAge = null;
+    //---------- Views --------------
+    function showOnboarding() {
+      document.body.className = '';
+      document.body.style.background = '';
+      document.getElementById('app').innerHTML = `
+        <div class="onboarding-center">
+          <header>
+            <span class="brand">
+              <div class="logo" title="Free Emoji icon">🔒</div>
+              <div>
+                <h1>FinSphere</h1>
+                <div class="lead">Smart savings for all. Whom does this website serve?</div>
+              </div>
+            </span>
+          </header>
+          <div class="option-container">
+            <div class="option-card" id="opt-housewife">
+              <div style="font-size:42px;">👩‍🍳</div>
+              <div style="font-size:20px;font-weight:700;margin:10px 0 3px 0;">Housewife</div>
+              <div style="color:var(--muted);font-size:15px;">Save for family, festivals, emergencies</div>
+            </div>
+            <div class="option-card" id="opt-office">
+              <div style="font-size:42px;">💼</div>
+              <div style="font-size:20px;font-weight:700;margin:10px 0 3px 0;">Office people</div>
+              <div style="color:var(--muted);font-size:15px;">Plan salaries, loans, investments, EMI</div>
+            </div>
+            <div class="option-card" id="opt-student">
+              <div style="font-size:42px;">🎒</div>
+              <div style="font-size:20px;font-weight:700;margin:10px 0 3px 0;">Students</div>
+              <div style="color:var(--muted);font-size:15px;">Manage pocket money, goals, enjoy rewards</div>
+            </div>
+          </div>
+        </div>
+      `;
+      ['housewife','office','student'].forEach(t=>{
+        document.getElementById('opt-'+t).onclick=function(){
+          userType=t;
+          showAgeInput();
+          document.querySelectorAll('.option-card').forEach(e=>e.classList.remove('selected'));
+          this.classList.add('selected');
+        }
+      });
+    }
+    function showAgeInput(){
+      document.getElementById('app').innerHTML = `
+        <header>
+          <span class="brand">
+            <div class="logo" title="Free Emoji icon">🔒</div>
+            <div>
+              <h1>FinSphere</h1>
+              <div class="lead">Please enter your age:</div>
+            </div>
+          </span>
+        </header>
+        <div class="age-container">
+          <input id="ageInput" type="number" placeholder="Enter age" min="12" max="100" style="font-size:24px;padding:10px 24px;border-radius: 8px;border: 2.2px solid var(--accent);width:170px;" />
+          <br>
+          <button class="age-btn" id="ageBtn">Start</button>
+        </div>
+      `;
+      document.getElementById('ageBtn').onclick = function() {
+        const val = parseInt(document.getElementById('ageInput').value,10);
+        if(isNaN(val)||val<10||val>110) {
+          alert("Please enter a valid age.");
+          return;
+        }
+        userAge=val;
+        if (typeof showMainApp === "function") showMainApp();
+      }
+    }
+
+    // ...All mainApp logic (unchanged, put your working code here)...
+    function showMainApp(){/*...your existing code...*/}
+    // mainAppHTML, attachMainAppLogic, etc.
+
+    // Initialize
+    showOnboarding();
+  </script>
+</body>
+</html>
