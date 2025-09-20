@@ -1,485 +1,232 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Page 2</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #0f1724;
-      --card: #111927;
-      --accent: #7c3aed;
-      --accent-2: #f59e0b;
-      --muted: #94a3b8;
-      --glass: rgba(255,255,255,0.04);
-      --success: #10b981;
-      --formal-bg: #fff;
-      --formal-card: #F0F2F4;
-      --formal-text: #212529;
-      --formal-muted: #878b93;
-      --elder-bg: #111;
-      --elder-card: #fafafa;
-      --elder-text: #000;
-      --elder-accent: #00bfff;
-      --elder-btn: #009688;
-      color-scheme: dark;
-    }
-    html, body { margin: 0; padding: 0; min-height: 100vh; height: auto; background: var(--bg); font-family: 'Inter', Arial, sans-serif; font-size: 13px; color: #e6eef8;}
-    body { display: flex; flex-direction: column; min-height: 100vh; height: auto;}
-    .container { max-width: 1100px; margin: 0 auto; padding: 10px; flex: 1; display: flex; flex-direction: column; min-height: 100vh;}
-    header { display: flex; align-items: center; gap: 12px; padding: 13px 0 15px 0; }
-    .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-    .logo { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg,#7c3aed,#5b21b6);}
-    h1 { font-size: 17px; margin: 0; font-weight: 700; }
-    .lead { margin: 2px 0 0 0; font-size: 12px; color: var(--muted);}
-    .option-card {border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,0.25);background:var(--card);padding:24px;text-align:center;flex:1 1 200px;min-width:220px;cursor:pointer;transition:box-shadow .2s;}
-    .option-card.selected {outline:3px solid var(--accent);}
-    .option-container {display:flex;gap:34px;justify-content:center;margin-top:24px;}
-    .age-container {margin:36px auto;text-align:center;}
-    .age-btn {margin-top:15px;padding:8px 18px;font-size:15px;border-radius:7px;font-weight:600;background:linear-gradient(90deg,var(--accent),#5b21b6);color:white;border:none;cursor:pointer;}
-    /* Gamified styles */
-    .gamified-bg {background: linear-gradient(120deg, #4f46e5 60%, #fbbf24);}
-    .badge {padding: 5px 10px;border-radius: 13px;background: rgba(255,255,255,0.083);margin-right:6px;font-size: 13px;display: inline-block;}
-    .gamified .badge { background: linear-gradient(90deg, #f59e0b, #7c3aed);color:#fff;}
-    .gamified .goal-item {transition:box-shadow 0.2s;}
-    .gamified .goal-item.completed {box-shadow:0 0 0 3px var(--success);}
-    .gamified .celebrate {color:#fbbf24; font-size:16px; font-weight:700; margin-top:8px;}
-    /* Formal styles */
-    .formal-bg {background: var(--formal-bg) !important;}
-    .formal-text {color: var(--formal-text) !important;}
-    .formal-card {background: var(--formal-card) !important; color: var(--formal-text) !important;}
-    .formal-lead {color: var(--formal-muted) !important;}
-    .formal-btn {background: #212529; color: #fff !important; border-radius:7px;}
-    .formal .badge {display:none;}
-    .formal input, .formal select {background: #fff !important; color: #212529 !important; border: 1px solid #dee2e6;}
-    /* Elderly styles */
-    .elder-bg {background: #F8F8F8 !important;}
-    .elder-card {background: #fff !important; color: #000 !important;}
-    .elder-text {color: #212 !important;}
-    .elder-btn {background: var(--elder-btn);color:#fff !important; font-size: 19px !important;}
-    .elderly *, .elderly input, .elderly button, .elderly select {font-size:24px !important;}
-    .elderly .goal-setup input, .elderly .goal-setup button {font-size:23px !important;}
-    .elderly label, .elderly h2, .elderly h3, .elderly h4 {font-size: 26px !important; font-weight: 700;}
-    .elderly .goal-list {font-size:23px !important;}
-    .elder-alert {color:#000;background:#FFEB3B;border-radius:7px;padding:10px 18px;font-size:23px;display:inline-block; margin: 20px 0;}
-    /* Common styles reused */
-    main { display: grid; grid-template-columns: 1fr 340px; gap: 12px; flex: 1; min-height: 0;}
-    section, aside.side { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.012));
-      border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.30); padding: 11px 14px; overflow: visible;
-    }
-    .goal-setup { display: flex; gap: 8px; margin-bottom: 8px; }
-    .input { flex: 1; display: flex; gap: 8px; }
-    input[type=text], input[type=number] { flex: 1; padding: 6px 8px; border-radius: 6px; border: none; background: var(--glass); color: inherit; font-size: 13px;}
-    button.btn { background: linear-gradient(90deg,var(--accent),#5b21b6); border: none; padding: 8px 11px; border-radius: 9px; color: #fff; font-weight: 600; cursor: pointer; font-size: 14px;}
-    .goal-list { display: flex; flex-direction: column; gap: 7px; max-height: 120px; overflow-y: auto; font-size: 13px;}
-    .goal-item { display: flex; gap: 10px; align-items: center; background: rgba(255,255,255,0.013); padding: 7px 9px; border-radius: 8px;}
-    .goal-item>div:first-child { width: 37px; height: 37px; font-weight: 700; font-size: 15px; background: linear-gradient(135deg,var(--accent),#5b21b6); border-radius: 8px; display: flex; justify-content: center; align-items: center;}
-    .goal-info { flex: 1; font-size: 12px; }
-    .progress { height: 7px; background: rgba(255,255,255,0.033); border-radius: 999px; margin-top: 4px; overflow: hidden;}
-    .progress>i { height: 100%; display: block; background: linear-gradient(90deg, var(--accent), #f0abfc); width: 0%; }
-    .small { font-size: 12px; color: var(--muted);}
-    .badges { display: flex; gap: 7px; margin-top: 8px; flex-wrap: wrap; font-size: 12px; min-height: 20px; }
-    @media (max-width: 900px) {
-      main{ grid-template-columns: 1fr; max-height: none;}
-      aside.side{ width:100%; max-height:none;}
-      .container{ height: auto;}
-    }
-  </style>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>TrustWise Onboarding</title>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"/>
+ <style>
+  :root {
+   --bg: #171f3a;
+   --bg-grad: linear-gradient(135deg, #5741d9 0%, #2a1859 100%);
+   --card: #111927;
+   --accent: #7c3aed;
+   --accent-2: #f59e0b;
+   --muted: #94a3b8;
+   --glass: rgba(255,255,255,0.05);
+   --success: #10b981;
+   --formal-bg: #fff;
+   --formal-card: #F0F2F4;
+   --formal-text: #212529;
+   --formal-muted: #878b93;
+   --elder-bg: #111;
+   --elder-card: #fafafa;
+   --elder-text: #000;
+   --elder-accent: #00bfff;
+   --elder-btn: #009688;
+   color-scheme: dark;
+  }
+  html, body { margin: 0; padding: 0; min-height: 100vh; background: var(--bg-grad); font-family: 'Inter', Arial, sans-serif; font-size: 15px; color: #e6eef8;}
+  body { width: 100vw; height: 100vh;}
+  .container {
+   width: 100vw; height: 100vh; min-height: 100vh; min-width: 100vw; display: flex;
+   align-items: center; justify-content: center;
+   background: none;
+  }
+  .onboarding-center {
+   width: 100vw; min-height: 100vh;
+   display: flex; flex-direction: column; align-items: center; justify-content: center;
+   padding: 0; margin: 0;
+  }
+  header {
+   width: 100%; margin-bottom: 15px; display: flex; align-items: center; justify-content: center;
+  }
+  .brand {
+   display: flex; align-items: center; gap: 18px; flex-direction: column;
+   justify-content: center;
+  }
+  .logo {
+   width: 62px; height: 62px; border-radius: 16px;
+   display: flex; align-items: center; justify-content: center;
+   font-size: 36px;
+   background: linear-gradient(135deg,#7c3aed,#5b21b6 80%);
+   box-shadow: 0 4px 24px 0 #7c3aed44;
+   margin-bottom: 6px;
+  }
+  h1 {
+   font-size: 2.1rem; font-weight: 900; letter-spacing: -1.1px;
+   margin: 0; color: #fde7ff; line-height: 1.1; text-align: center;
+  }
+  .lead {
+   margin: 8px 0 0 0;
+   font-size: 1.2em;
+   color: var(--muted);
+   font-weight: 500;
+   text-align: center;
+  }
+  .option-container {
+   margin-top: 38px;
+   display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; align-items: center; width: 100%;
+  }
+  .option-card {
+   border-radius: 18px;
+   box-shadow: 0 10px 32px 0 #0004, 0 2px 16px 0 #693aed22;
+   background: var(--card);
+   padding: 38px 34px 34px 34px;
+   text-align: center;
+   min-width: 220px; min-height: 185px;
+   cursor: pointer;
+   font-size: 1.14em;
+   transition: box-shadow 0.16s, transform 0.16s, outline 0.19s, border 0.19s;
+   border: 2px solid transparent;
+   position: relative;
+   z-index: 0;
+   overflow: visible;
+   backdrop-filter: blur(1px);
+  }
+  .option-card.selected,
+  .option-card:focus-visible {
+   outline: 3px solid var(--accent);
+   border-color: var(--accent-2);
+   background: linear-gradient(120deg, #221d60 30%, #27165b 100%);
+   box-shadow: 0 8px 34px 0 #7c3aed44, 0 1.5px 14px 0 #2a18593c;
+   z-index: 2;
+  }
+  .option-card:hover {
+   box-shadow: 0 24px 48px 0 #7c3aed99, 0 2px 16px 0 #f59e0b44;
+   transform: scale(1.055);
+   outline: 3.5px solid var(--accent-2);
+   border-color: var(--accent);
+   z-index: 2;
+  }
+  .option-card > div[style*="font-size:42px"] {
+   font-size: 55px !important; margin-bottom: 8px;
+  }
+  .option-card > div[style*="font-size:20px"] {
+   font-size: 1.23em !important; font-weight: 800; margin-bottom: 7px;
+  }
+  .option-card > div[style*="color:var(--muted)"] {
+   color: #e0c2fa; font-size:1em !important;
+  }
+  .age-container {
+   margin: 38px auto 18px auto; text-align: center; display: flex; flex-direction: column; align-items: center;
+  }
+  .age-btn {
+   margin-top: 22px; padding: 11px 32px; font-size: 19px;
+   border-radius:10px;font-weight:800;
+   background:linear-gradient(90deg,var(--accent),#5b21b6 70%);
+   color:white;border:none;cursor:pointer;
+   letter-spacing: 0.03em;
+   box-shadow:0 6px 20px #5b21b688;
+   transition: background 0.15s, transform 0.11s;
+   outline: none;
+  }
+  .age-btn:hover { background:linear-gradient(90deg,#7849cf,#f59e0b);}
+  #ageInput {
+   font-size: 25px; padding:11px 24px;
+   border-radius: 9px; border: 2.2px solid var(--accent);
+   width:170px; text-align: center;
+   margin-bottom: 12px;
+   background: var(--card); color: #dedaec;
+  }
+  @media (max-width: 900px) {
+   h1 {font-size:1.1rem;}
+   .option-container{ gap:19px;}
+   .option-card {min-width: 130px; padding:26px 16px;}
+  }
+  @media (max-width: 700px) {
+   .container, .onboarding-center { min-height: unset; height: auto; }
+   .option-container {gap: 14px;}
+  }
+ </style>
 </head>
 <body>
-  <div class="container" id="app">
-    <!-- INITIAL ONBOARDING WILL GO HERE -->
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    //-------------- State -------------
-    let userType = null, userAge = null;
-    //---------- Views --------------
-    function showOnboarding() {
-      document.body.className = '';
-      document.body.style.background = '';
-      document.getElementById('app').innerHTML = `
-        <header>
-          <span class="brand">
-            <div class="logo" title="Free Emoji icon">🔒</div>
-            <div>
-              <h1>FinSphere</h1>
-              <div class="lead">Smart savings for all. Whom does this website serve?</div>
-            </div>
-          </span>
-        </header>
-        <div class="option-container">
-          <div class="option-card" id="opt-housewife">
-            <div style="font-size:36px;">👩‍🍳</div>
-            <div style="font-size:18px;font-weight:700;margin:10px 0 3px 0;">Housewife</div>
-            <div style="color:var(--muted);font-size:13px;">Save for family, festivals, emergencies</div>
-          </div>
-          <div class="option-card" id="opt-office">
-            <div style="font-size:36px;">💼</div>
-            <div style="font-size:18px;font-weight:700;margin:10px 0 3px 0;">Office people</div>
-            <div style="color:var(--muted);font-size:13px;">Plan salaries, loans, investments, EMI</div>
-          </div>
-          <div class="option-card" id="opt-student">
-            <div style="font-size:36px;">🎒</div>
-            <div style="font-size:18px;font-weight:700;margin:10px 0 3px 0;">Students</div>
-            <div style="color:var(--muted);font-size:13px;">Manage pocket money, goals, enjoy rewards</div>
-          </div>
-        </div>
-      `;
-      ['housewife','office','student'].forEach(t=>{
-        document.getElementById('opt-'+t).onclick=function(){
-          userType=t;
-          showAgeInput();
-          document.querySelectorAll('.option-card').forEach(e=>e.classList.remove('selected'));
-          this.classList.add('selected');
-        }
-      });
+ <div class="container" id="app">
+  <!-- INITIAL ONBOARDING WILL GO HERE -->
+ </div>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script>
+  //-------------- State -------------
+  let userType = null, userAge = null;
+  //---------- Views --------------
+  function showOnboarding() {
+   document.body.className = '';
+   document.body.style.background = '';
+   document.getElementById('app').innerHTML = `
+    <div class="onboarding-center">
+     <header>
+      <span class="brand">
+       <div class="logo" title="Free Emoji icon">🔒</div>
+       <h1>TrustWise</h1>
+       <div class="lead">Smart savings for all.<br>Whom does this website serve?</div>
+      </span>
+     </header>
+     <div class="option-container">
+      <div class="option-card" id="opt-housewife">
+       <div style="font-size:42px;">👩‍🍳</div>
+       <div style="font-size:20px;font-weight:700;">Housewife</div>
+       <div style="color:var(--muted);font-size:15px;">Save for family, festivals, emergencies</div>
+      </div>
+      <div class="option-card" id="opt-office">
+       <div style="font-size:42px;">💼</div>
+       <div style="font-size:20px;font-weight:700;">Office people</div>
+       <div style="color:var(--muted);font-size:15px;">Plan salaries, loans, investments, EMI</div>
+      </div>
+      <div class="option-card" id="opt-student">
+       <div style="font-size:42px;">🎒</div>
+       <div style="font-size:20px;font-weight:700;">Students</div>
+       <div style="color:var(--muted);font-size:15px;">Manage pocket money, goals, enjoy rewards</div>
+      </div>
+      <div class="option-card" id="opt-farmer">
+       <div style="font-size:42px;">🚜</div>
+       <div style="font-size:20px;font-weight:700;">Farmer</div>
+       <div style="color:var(--muted);font-size:15px;">Budget crops, tools, season planning, savings</div>
+      </div>
+     </div>
+    </div>
+   `;
+   ['housewife','office','student','farmer'].forEach(t=>{
+    document.getElementById('opt-'+t).onclick=function(){
+     userType=t;
+     showAgeInput();
+     document.querySelectorAll('.option-card').forEach(e=>e.classList.remove('selected'));
+     this.classList.add('selected');
     }
-    function showAgeInput(){
-      document.getElementById('app').innerHTML = `
-        <header>
-          <span class="brand">
-            <div class="logo" title="Free Emoji icon">🔒</div>
-            <div>
-              <h1>FinSphere</h1>
-              <div class="lead">Please enter your age:</div>
-            </div>
-          </span>
-        </header>
-        <div class="age-container">
-          <input id="ageInput" type="number" placeholder="Enter age" min="12" max="100" style="font-size:24px;padding:10px 24px;border-radius: 8px;border: 2.2px solid var(--accent);width:170px;" />
-          <br>
-          <button class="age-btn" id="ageBtn">Start</button>
-        </div>
-      `;
-      document.getElementById('ageBtn').onclick = function() {
-        const val = parseInt(document.getElementById('ageInput').value,10);
-        if(isNaN(val)||val<10||val>110) {
-          alert("Please enter a valid age.");
-          return;
-        }
-        userAge=val;
-        if (typeof showMainApp === "function") showMainApp();
-      }
+   });
+  }
+  function showAgeInput(){
+   document.getElementById('app').innerHTML = `
+    <div class="onboarding-center">
+     <header>
+      <span class="brand">
+       <div class="logo" title="Free Emoji icon">🔒</div>
+       <h1>FinSphere</h1>
+       <div class="lead">Please enter your age:</div>
+      </span>
+     </header>
+     <div class="age-container">
+      <input id="ageInput" type="number" placeholder="Enter age" min="12" max="100"/>
+      <button class="age-btn" id="ageBtn">Start</button>
+     </div>
+    </div>
+   `;
+   document.getElementById('ageBtn').onclick = function() {
+    const val = parseInt(document.getElementById('ageInput').value,10);
+    if(isNaN(val)||val<10||val>110) {
+     alert("Please enter a valid age.");
+     return;
     }
+    userAge=val;
+    if (typeof showMainApp === "function") showMainApp();
+   }
+  }
 
-    //------------ Main App (UI switches) -----------------//
-    function showMainApp(){
-      let mode = "";
-      if (userAge > 55) { // elderly
-        mode = "elderly";
-      } else if ((userType === "student" || userType === "housewife") && userAge < 35) {
-        mode = "gamified";
-      } else {
-        mode = "formal";
-      }
-      // Apply global classes and backgrounds
-      document.body.className = mode;
-      if(mode==="gamified") document.body.style.background = "linear-gradient(120deg, #4f46e5 60%, #fbbf24)";
-      else if(mode==="formal") document.body.style.background = "var(--formal-bg)";
-      else if(mode==="elderly") document.body.style.background = "#F8F8F8";
-      else document.body.style.background = "var(--bg)";
+  // ...All mainApp logic (unchanged, put your working code here)...
+  function showMainApp(){/*...your existing code...*/}
+  // mainAppHTML, attachMainAppLogic, etc.
 
-      document.getElementById('app').innerHTML = mainAppHTML(mode);
-      attachMainAppLogic(mode);
-    }
-
-    //------ mainAppHTML returns the dynamic HTML ------------//
-    function mainAppHTML(mode){
-      let title = userType === 'housewife' ? "Home Savings" : userType === 'office'? "Personal Vault" : "Pocket Money Tracker";
-      let formalClass = mode==="formal" ? 'formal formal-bg formal-text' : '';
-      let elderlyClass = mode==="elderly" ? 'elder-bg elder-text' : '';
-      return `
-        <header class="${formalClass} ${elderlyClass||''}">
-          <span class="brand">
-            <div class="logo">${mode==="gamified"?"🏆":mode==="elderly"?"🔵":"🔒"}</div>
-            <div>
-            <h1>${title}</h1>
-            <div class="${mode==='formal'?'formal-lead':'lead'}">
-              ${mode==="elderly"?'<span class="elder-alert">Simple steps for secure savings — tap on the boxes & follow instructions.</span>':
-              mode==="gamified"? "Earn badges for every financial step!":
-              "Track your funds with security."}
-            </div>
-            </div>
-          </span>
-        </header>
-        <main>
-          <section class="card hero ${mode}">
-            <h2>${mode==="elderly"?"Track your money goals":"Emergency Savings Mode"}</h2>
-            <p class="${mode==='formal'?'formal-lead':'sub'}">${mode==="elderly"?"Set aside small amounts each month and see your progress easily!":"Lock funds, add micro-insurance, and build a habit — designed for all."}</p>
-            <div class="goal-setup">
-              <div class="input">
-                <input id="goalName" type="text" placeholder="Goal name (Emergency, Trip, etc.)" />
-                <input id="goalAmount" type="number" placeholder="Amount (₹)" min="100" />
-                <button class="btn ${mode==='formal'?'formal-btn':''} ${mode==='elderly'?'elder-btn':''}" id="createGoal">Create Goal</button>
-              </div>
-              <div style="display:flex;gap:7px">
-                <button class="ghost" id="roundupToggle">Round-up: OFF</button>
-                <button class="ghost" id="autoSaveToggle">AutoSave: OFF</button>
-              </div>
-            </div>
-            <div class="goal-list" id="goalList"></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-              <div>
-                <div class="small">Total Saved</div>
-                <div style="${mode==='elderly'?'font-weight:700;font-size:30px':'font-weight:700;font-size:17px'};">₹ <span id="totalSaved">0</span></div>
-              </div>
-              <div>
-                <div class="small">Badges</div>
-                <div class="badges" id="badges"></div>
-              </div>
-            </div>
-            <div style="margin-top:10px;">
-              <h4 style="font-size:16px; margin-bottom: 4px;">Total Savings Breakdown</h4>
-              <canvas id="savingsPie" width="280" height="160"></canvas>
-            </div>
-            <div style="margin-top:10px;">
-              <h4 style="font-size:16px; margin-bottom: 4px;">Savings History</h4>
-              <canvas id="savingsLine" width="280" height="130"></canvas>
-            </div>
-            <div style="margin-top:10px;">
-              <h4 style="font-size:16px; margin-bottom:4px;">Predicted Savings (Next 6 Months)</h4>
-              <canvas id="predictedLine" width="280" height="130"></canvas>
-            </div>
-            ${mode==="formal"?"":`
-            <div style="margin-top:14px; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px;">
-              <h3 style="font-size:15px; margin-bottom:4px;">EMI Budget Calculator</h3>
-              <p class="small" style="margin-bottom:6px;">Enter your monthly salary to get a recommended EMI budget.</p>
-              <div style="display:flex;gap:9px;max-width:320px;">
-                <input id="salaryInput" type="number" placeholder="Monthly Salary (₹)" min="0" />
-                <button class="btn ${mode==='elderly'?'elder-btn':''}" id="calculateEMI">Calculate</button>
-              </div>
-              <div id="emiResults"></div>
-            </div>`}
-          </section>
-          <aside class="side ${mode==='formal'?'formal-card':''} ${mode==='elderly'?'elder-card':''}">
-            <div class="panel">
-              <h3>${mode==="elderly"?"Help":"Lock & Protect"}</h3>
-              <div class="toggle">
-                <div>
-                  <div class="small">${mode==="elderly"?"You can make more than one goal. Locking prevents you from spending by mistake.":"Emergency Vault"}</div>
-                  <div id="activeVault" style="font-weight: 700;">No active vaults</div>
-                </div>
-                <div class="lock-cta">
-                  <div class="pill" id="lockStatus">Unlocked</div>
-                </div>
-              </div>
-              <div class="insurance">
-                <div class="row">
-                  <div>
-                    <div class="small">Accident Shield</div>
-                    <div class="small">₹20 / month — up to ₹50,000</div>
-                  </div>
-                  <div><button class="ghost" id="buyInsurance">${mode==="elderly"?"Add":"Add"}</button></div>
-                </div>
-                <div class="row">
-                  <div>
-                    <div class="small">Travel Hero</div>
-                    <div class="small">₹15 / month — delay & luggage cover</div>
-                  </div>
-                  <div><button class="ghost" id="buyTravel">${mode==="elderly"?"Add":"Add"}</button></div>
-                </div>
-              </div>
-              <div class="ai-chat">
-                <h4 style="margin:0 0 6px;">AI Advisor (Demo)</h4>
-                <div class="messages" id="messages"></div>
-                <div class="chat-input">
-                  <input id="userMsg" placeholder="Ask the advisor..." />
-                  <button class="btn" id="sendMsg">Ask</button>
-                </div>
-              </div>
-              <div style="margin-top:9px;">
-                <h4 style="margin: 0 0 6px;">Quick Actions</h4>
-                <div style="display:flex;gap:7px;">
-                  <button class="ghost" id="withdrawBtn">Withdraw (Locked)</button>
-                  <button class="ghost" id="unlockBtn">Unlock Vault</button>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </main>
-        <footer style="margin-top:15px;text-align:center;font-size:14px;color:var(--muted);">${mode==="elderly"?"":"Inclusive, open source demo — provides different looks per user"}</footer>
-      `;
-    }
-
-    //----- App logic switches for each mode ---------
-    function attachMainAppLogic(mode){
-      // Shared state
-      const goals = [], badges = new Set(); let totalSaved=0; let pieChart = null, historyChart=null, predictedChart=null;
-      const savingsHistory = [];
-      let roundUp = false, autoSave=false;
-      // Goal render
-      function renderGoals() {
-        const list = document.getElementById('goalList');
-        list.innerHTML = '';
-        goals.forEach((g, i) => {
-          const el = document.createElement('div');
-          el.className = 'goal-item' + (mode==='gamified'&&g.saved>=g.amount?' completed':'');
-          el.innerHTML = `
-            <div>₹</div>
-            <div class="goal-info">
-              <div style="display:flex;justify-content:space-between;align-items:center">
-                <div style="font-weight:700">${g.name}</div>
-                <div class="small">Target ₹${g.amount}</div>
-              </div>
-              <div class="progress"><i style="width:${Math.min(100, (g.saved / g.amount) * 100)}%"></i></div>
-              <div style="display:flex;gap:7px;margin-top:4px;align-items:center">
-                <div class="small">Saved ₹${g.saved}</div>
-                <div style="margin-left:auto; display:flex; gap:6px; align-items:center;">
-                  <input type="number" min="1" placeholder="+₹ amt" id="addAmt${i}" style="width: 63px; padding: 5px 7px;" />
-                  <button class="ghost" id="addMoneyBtn${i}">Add</button>
-                  <button class="ghost" id="lockGoalBtn${i}">${g.locked ? 'Locked' : 'Lock'}</button>
-                </div>
-              </div>
-              ${mode==="gamified"&&g.saved>=g.amount?'<div class="celebrate">🎉 Goal Completed!</div>':''}
-            </div>
-          `;
-          list.appendChild(el);
-          document.getElementById(`addMoneyBtn${i}`).addEventListener('click', function () {
-            const input = document.getElementById(`addAmt${i}`);
-            let amt = Number(input.value);
-            if (isNaN(amt) || amt <= 0) {
-              alert('Please enter a valid amount greater than zero.'); return;
-            }
-            g.saved += amt; totalSaved += amt;
-            savingsHistory.push({ date: new Date(), value: totalSaved });
-            if (g.saved >= g.amount && mode==="gamified") badges.add('Goal Achieved');
-            if (totalSaved >= 1000) badges.add('First 1K Saved');
-            if (totalSaved >= 5000) badges.add('5K Club');
-            input.value = '';
-            renderGoals();
-          });
-          document.getElementById(`lockGoalBtn${i}`).addEventListener('click', function () {toggleLockGoal(i);});
-        });
-        document.getElementById('totalSaved').innerText = totalSaved;
-        renderBadges();
-        const activeVaultCount = goals.filter(g => g.locked).length;
-        document.getElementById('activeVault').innerText = activeVaultCount ? `${activeVaultCount} vault(s) active` : 'No active vaults';
-        document.getElementById('lockStatus').innerText = activeVaultCount ? 'Locked' : 'Unlocked';
-        renderPieChart(); renderSavingsLine(); renderPredictedLine();
-      }
-      function renderBadges(){
-        const b = document.getElementById('badges');
-        b.innerHTML = '';
-        if(mode!=="gamified") return;
-        badges.forEach(badge=>{
-          const div=document.createElement('div');
-          div.className="badge";
-          div.innerText=badge;
-          b.appendChild(div);
-        });
-      }
-      function renderPieChart() {
-        const ctx = document.getElementById('savingsPie')?.getContext('2d'); if (!ctx) return;
-        const labels = goals.map(g=>g.name); const data = goals.map(g=>g.saved);
-        if (pieChart) pieChart.destroy();
-        if (goals.length === 0 || data.reduce((a,b)=>a+b,0)===0) {
-          pieChart = new Chart(ctx, { type:'pie', data:{ labels:['No Savings'], datasets:[{data:[1],backgroundColor:['#374151']}]},
-            options:{ plugins: {legend: {display:true, position: 'bottom', labels:{color: mode==='formal'?'#333':'#e6eef8', font:{size:13}}},tooltip:{enabled:false}}}});
-          return;
-        }
-        pieChart = new Chart(ctx, { type:'pie', data:{labels, datasets:[{data,backgroundColor:['#7c3aed','#f59e0b','#10b981','#3b82f6','#ef4444','#f472b6','#6366f1']}]} ,
-                    options: { plugins: {legend: {display:true, position:'bottom',labels:{color: mode==='formal'?'#333':'#e6eef8', font:{size:13}}}, tooltip:{enabled:true}}}});
-      }
-      function renderSavingsLine() {
-        const ctx = document.getElementById('savingsLine')?.getContext('2d');
-        if (!ctx) return;
-        if (historyChart) historyChart.destroy();
-        const labels = savingsHistory.map(h=>h.date.toLocaleDateString());
-        const data = savingsHistory.map(h=>h.value);
-        historyChart = new Chart(ctx, {type:'line', data:{labels,datasets:[{label:'Total Saved (₹)',data,borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,0.12)',fill:true,tension:0.3}]},
-          options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:mode==='formal'?'#212':'#e6eef8'}},y:{ticks:{color:mode==='formal'?'#212':'#e6eef8'},beginAtZero:true}}}
-        });
-      }
-      function renderPredictedLine() {
-        const ctx = document.getElementById('predictedLine')?.getContext('2d');
-        if (!ctx) return;
-        if (predictedChart) predictedChart.destroy();
-        let n = savingsHistory.length > 1 ? savingsHistory.length - 1 : 1, totalDiff = 0;
-        for(let i=1;i<savingsHistory.length;i++){totalDiff+=savingsHistory[i].value-savingsHistory[i-1].value;}
-        const avgWeekly = n ? totalDiff/n : 500;
-        const futureLabels=[],futureData=[];let lastValue=totalSaved;
-        for(let i=1;i<=24;i++){lastValue+=avgWeekly;futureLabels.push(`+${i}w`);futureData.push(Math.round(lastValue));}
-        predictedChart = new Chart(ctx,{type:'line',data:{labels:futureLabels,datasets:[{label:'Predicted Savings (₹)',data:futureData,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.08)',fill:true,borderDash:[6,6],tension:0.25}]},
-            options:{plugins:{legend:{display:false}},scales:{x:{ticks:{color:mode==='formal'?'#212':'#e6eef8'}},y:{ticks:{color:mode==='formal'?'#212':'#e6eef8'},beginAtZero:true}}}});
-      }
-      function toggleLockGoal(i){
-        const g=goals[i];
-        if (!g.locked) {g.locked = true;g.lockedAt = Date.now();alert('Goal locked. Withdrawals require unlock (simulated for demo).');}
-        else{const waited=Date.now()-(g.lockedAt||0);
-          if(waited<1000*60*60*24*7){const ce=confirm("Goal locked — withdraw early for 2% penalty?");if(!ce)return;const penalty=Math.floor(g.saved*0.02);g.saved-=penalty;totalSaved-=penalty;}
-          g.locked = false;}
-        renderGoals();
-      }
-      document.getElementById('createGoal').addEventListener('click',()=>{
-        const name=document.getElementById('goalName').value||'Emergency', amount=Number(document.getElementById('goalAmount').value)||1000;
-        const g={name,amount,saved:0,locked:false,created:Date.now()}; goals.push(g); savingsHistory.push({date:new Date(),value:totalSaved});
-        renderGoals(); document.getElementById('goalName').value='';document.getElementById('goalAmount').value='';
-      });
-      document.getElementById('roundupToggle').addEventListener('click',()=>{roundUp=!roundUp;document.getElementById('roundupToggle').innerText='Round-up: '+(roundUp?'ON':'OFF');if(roundUp)badges.add('Round-up ON');renderGoals();});
-      document.getElementById('autoSaveToggle').addEventListener('click',()=>{autoSave=!autoSave;document.getElementById('autoSaveToggle').innerText='AutoSave: '+(autoSave?'ON':'OFF'); if (autoSave) badges.add('AutoSave ON'); renderGoals();});
-      document.getElementById('buyInsurance').addEventListener('click',()=>{badges.add('Accident Shield');alert('Accident Shield added (demo).');renderGoals();});
-      document.getElementById('buyTravel').addEventListener('click',()=>{badges.add('Travel Hero');alert('Travel Hero added (demo).');renderGoals();});
-      document.getElementById('withdrawBtn').addEventListener('click',()=>{
-        const locked=goals.find(g=>g.locked);
-        if(!locked){alert('No locked vaults. Use withdraw on a goal.');return;}
-        alert('Withdraw blocked: vault is locked. Use Unlock Vault to start unlock (demo).');
-      });
-      document.getElementById('unlockBtn').addEventListener('click',()=>{
-        const locked=goals.find(g=>g.locked);
-        if(!locked){alert('No locked vaults to unlock.');return;}
-        locked.unlockRequestedAt=Date.now();
-        alert('Unlock requested. For demo, you can unlock after simulated 3 seconds or cancel.');
-        setTimeout(()=>{
-          const proceed=confirm('Simulated period complete. Confirm unlock and release funds? (demo)');
-          if(proceed){locked.locked=false;renderGoals();alert('Vault unlocked. You can withdraw (demo).');}
-        },3000);
-      });
-      if(document.getElementById('calculateEMI')){
-        document.getElementById('calculateEMI').addEventListener('click',()=>{
-          const salary=Number(document.getElementById('salaryInput').value);
-          const resDiv=document.getElementById('emiResults');
-          if(isNaN(salary)||salary<=0){resDiv.style.color="red";resDiv.textContent="Please enter a valid monthly salary greater than 0.";return;}
-          const emiBudget=salary*.3, annualInterestRate=.1,tenureMonths=60,monthlyInterestRate=annualInterestRate/12;
-          const loanAmount=emiBudget*(1-Math.pow(1+monthlyInterestRate,-tenureMonths))/monthlyInterestRate;
-          resDiv.style.color=mode==='formal'?"#212":"var(--accent)";
-          resDiv.innerHTML=`Recommended EMI budget: ₹${emiBudget.toFixed(0)} per month<br/>Estimated Loan Amount: ₹${loanAmount.toFixed(0)} (10% per annum, 5 years)`;
-        });
-      }
-      // AI "chat" demo:
-      const messages = document.getElementById('messages');
-      document.getElementById('sendMsg').addEventListener('click',()=>{handleUserMsg();});
-      document.getElementById('userMsg').addEventListener('keydown',e=>{if(e.key==="Enter")handleUserMsg();});
-      function handleUserMsg(){
-        const text=document.getElementById('userMsg').value.trim();
-        if(!text)return;
-        appendMsg(text,'user');
-        document.getElementById('userMsg').value='';
-        setTimeout(()=>{const reply=pseudoAIReply(text);appendMsg(reply,'bot');},600);
-      }
-      function appendMsg(t,who){
-        const d=document.createElement('div');d.className='msg '+(who==='user'?'user':'bot');
-        d.innerText=t;messages.appendChild(d);messages.scrollTop=messages.scrollHeight;
-      }
-      function pseudoAIReply(q){
-        q=q.toLowerCase();
-        if(q.includes('save')||q.includes('how')){
-          return mode==="gamified"?"Gamify savings: Try 'AutoSave' or complete a goal for a badge!":"Set aside at least 10% every month automatically.";
-        }
-        if(q.includes('insurance')) return "Add Accident or Travel cover for small fees, covers emergencies.";
-        return mode==="elderly"?"List monthly expenses, set a target, and save small amounts every week.":"List goals, automate small weekly deposits!";
-      }
-      // Demo: pre-populate for easier demo
-      (function init(){
-        document.getElementById('goalName').value=mode==="elderly"?'Medical Fund':mode==="gamified"?"Study Trip":"Emergency Fund";
-        document.getElementById('goalAmount').value='5000';
-        document.getElementById('createGoal').click();
-        goals[0].saved+=500;totalSaved+=500;savingsHistory.push({date:new Date(),value:totalSaved});renderGoals();
-      })();
-    }
-    // Initialize first onboarding screen
-    showOnboarding();
-  </script>
+  // Initialize
+  showOnboarding();
+ </script>
 </body>
 </html>
